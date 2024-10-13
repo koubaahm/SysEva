@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block head %}
+
+    {% block title%}
+        {{ app.user.Mysection.nom }}
+    {% endblock %}
+{% endblock %}
+
+{% block body %}
+    <p>{{ app.user.Mysection.nom }}</p>
+    <a href='/add_article'>Add Article </a>
+    <p> Articles List :  </p>
+{% endblock %}

@@ -1,0 +1,54 @@
+parameters:
+    app.jwtsecret: '%env(JWT_SECRET)%'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Kernel.php}'
+
+    # Service definitions for Event Subscribers
+    App\EventSubscriber\UserSubscriber:
+        arguments:
+            $jwtService: '@App\Service\JWTServiceInterface'
+            $mailService: '@App\Service\SendMailServiceInterface'
+            $entityManager: '@doctrine.orm.entity_manager'
+        tags:
+            - { name: 'kernel.event_subscriber' }
+
+    App\EventSubscriber\InvitationSubscriber:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $mailer: '@mailer.mailer'
+        tags:
+            - { name: 'kernel.event_subscriber' }
+
+    App\EventSubscriber\TemplateNotificationInjector:
+        arguments:
+            $notificationService: '@App\Service\NotificationService'
+            $logger: '@logger'
+        tags:
+            - { name: 'kernel.event_subscriber' }
+
+    # Service definition for InvitationService
+    App\Service\InvitationService:
+        arguments:
+            $mailer: '@mailer.mailer'
+    # config/services.yaml
+
+    App\Service\NotificationService:
+        arguments:
+            $notificationRepository: '@App\Repository\NotificationRepository'
+            $security: '@security.helper'
+
+    App\EventListener\NotificationListener:
+        arguments:
+            $notificationService: '@App\Service\NotificationService'
+            $twig: '@twig'
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.controller', method: 'onKernelController' }

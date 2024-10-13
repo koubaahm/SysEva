@@ -1,0 +1,15 @@
+{# templates/section/delete.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Supprimer une Section{% endblock %}
+
+{% block body %}
+    <h1>Supprimer une Section</h1>
+    <p>Êtes-vous sûr de vouloir supprimer la section "{{ section.nom }}" ?</p>
+    {# Formulaire de confirmation pour la suppression de la section #}
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token('delete' ~ section.id) }}">
+        <button type="submit">Confirmer la Suppression</button>
+    </form>
+{% endblock %}

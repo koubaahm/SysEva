@@ -1,0 +1,55 @@
+{% block title %}Log in!{% endblock %}
+
+
+{% block body %}
+<div class="relative flex h-full w-full">
+  <div class="h-screen w-1/2 bg-black">
+    <div class="mx-auto flex h-full w-2/3 flex-col justify-center text-white xl:w-1/2">
+      <div>
+        <p class="text-2xl">Login |</p>
+        <p>please login to continue |</p>
+      </div>
+      <div class="mt-10">
+        <form method="post">
+          {% if error %}
+          <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+            {{ error.messageKey|trans(error.messageData, 'security') }}
+          </div>
+          {% endif %}
+
+          {% if app.user %}
+          <div class="mb-3">
+            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}" class="text-blue-500 hover:underline">Logout</a>
+          </div>
+          {% endif %}
+
+          <div>
+            <label class="mb-2.5 block font-extrabold" for="inputEmail">Email</label>
+            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="inline-block w-full rounded-full bg-white p-2.5 leading-none text-black placeholder-indigo-900 shadow placeholder:opacity-30" placeholder="mail@user.com" required autofocus>
+          </div>
+          <div class="mt-4">
+            <label class="mb-2.5 block font-extrabold" for="inputPassword">Password</label>
+            <input type="password" name="password" id="inputPassword" class="inline-block w-full rounded-full bg-white p-2.5 leading-none text-black placeholder-indigo-900 shadow" required>
+          </div>
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+          <div class="mt-4 flex w-full flex-col justify-between sm:flex-row">
+            <div>
+              <input type="checkbox" id="remember_me" name="_remember_me" /><label for="remember_me" class="mx-2 text-sm">Remember me</label>
+            </div>
+            
+              <a href="https://google.com" class="text-sm hover:text-gray-200">Forgot password?</a>
+            
+          </div>
+          <div class="my-10">
+            <button class="w-full rounded-full bg-orange-600 p-5 hover:bg-orange-800">Login</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="h-screen w-1/2 bg-blue-600">
+    <img src="{{ asset('image/syseva.webp') }}" class="h-full w-full object-cover" />
+  </div>
+</div>
+{% endblock %}

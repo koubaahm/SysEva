@@ -1,0 +1,3 @@
+app_confirm_account:
+    path: /confirm/{token}
+    controller: App\Controller\Admin\ConfirmUserController::confirmAccount

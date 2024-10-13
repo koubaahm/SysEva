@@ -1,0 +1,157 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Invite Users{% endblock %}
+
+{% block body %}
+<div class="invite-container">
+    <h1 class="invite-title">Send Invitations to Review</h1>
+
+    <div class="flex h-full min-h-screen justify-center items-center bg-gray-100">
+        <div class="w-full max-w-screen-xl p-8 bg-white rounded-lg shadow-lg">
+            {{ form_start(form) }}
+            <div class="image-container">
+                <img src="{{ asset('images/aa.png') }}" alt="Evaluation Article Image" class="image-style">
+            </div>
+            <div class="flex">
+                <div class="flex-1 p-4">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4">Select Keyword</h2>
+                    {{ form_widget(form.section, {'attr': {'class': 'select2 bg-gray-50 border border-gray-200 rounded p-2 w-full'}}) }}
+                </div>
+                <div class="flex-1 p-4">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4">Select Articles</h2>
+                    {{ form_widget(form.articles, {'attr': {'class': 'select2 bg-gray-50 border border-gray-200 rounded p-2 w-full'}}) }}
+                </div>
+                <div class="flex-1 p-4">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4">Select Users</h2>
+                    {{ form_widget(form.users, {'attr': {'class': 'select2 bg-gray-50 border border-gray-200 rounded p-2 w-full'}}) }}
+                </div>
+            </div>
+            <div class="flex justify-center mt-4">
+                <button type="submit" class="submit-btn">Send Invitations</button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const successMessage = "{{ app.flashes('success')|first }}";
+            if (successMessage) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: successMessage,
+                    icon: 'success',
+                    confirmButtonText: 'Ok',
+                    customClass: {
+                        confirmButton: 'swal2-confirm-button'
+                    }
+                });
+            }
+
+            $('.select2').select2({
+                width: '100%'
+            });
+
+            $('#{{ form.section.vars.id }}').on('change', function() {
+                const sectionId = $(this).val() || 'all';
+                $.ajax({
+                    url: '{{ path("filter_articles_by_section") }}',
+                    method: 'POST',
+                    data: { keyword: sectionId },
+                    success: function(data) {
+                        const $articles = $('#{{ form.articles.vars.id }}');
+                        const selectedArticles = $articles.val();
+                        $articles.empty();
+                        $.each(data, function(key, article) {
+                            $articles.append(new Option(article.titre, article.id));
+                        });
+                        $articles.val(selectedArticles).trigger('change');
+                    },
+                    error: function() {
+                        console.error('An error occurred while fetching articles.');
+                    }
+                });
+
+                $.ajax({
+                    url: '{{ path("filter_users_by_section") }}',
+                    method: 'POST',
+                    data: { keyword: sectionId },
+                    success: function(data) {
+                        const $users = $('#{{ form.users.vars.id }}');
+                        const selectedUsers = $users.val();
+                        $users.empty();
+                        $.each(data, function(key, user) {
+                            $users.append(new Option(`${user.nom} (${user.email})`, user.id));
+                        });
+                        $users.val(selectedUsers).trigger('change');
+                    },
+                    error: function() {
+                        console.error('An error occurred while fetching users.');
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .invite-container {
+            background-color: #fff;
+            padding: 10px 0;
+        }
+        .image-container {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .image-style {
+            width: 100%;
+            max-height: 450px;
+            object-fit: contain;
+        }
+        .flex {
+            background-color: #fff;
+        }
+        .bg-gray-200 {
+            background-color: #aaa;
+        }
+        .space-x-4 {
+            background-color: #aaa;
+        }
+        .bg-gray-100 {
+            background-color: #fff;
+            margin-top: -20px;
+        }
+         .submit-btn {
+            background-color: #FFA500; /* Orange */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #FF8C00; /* Darker orange */
+            box-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
+        }
+
+        .submit-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.75);
+        }
+
+        .submit-btn:active {
+            background-color: #FF7F00; /* Even darker orange */
+        }
+    </style>
+{% endblock %}

@@ -1,0 +1,79 @@
+{# templates/section/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+{% block title %}Add section{% endblock %}
+
+
+{% block body %}
+
+
+
+<div data-x-data="layout" class="flex h-screen">
+    <div class="relative flex flex-col bg-clip-border rounded-xl bg-gray-200 text-gray-700 h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
+      <div class="mb-2 p-4">
+        <h5 class="block antialiased tracking-normal font-sans text-xl font-semibold leading-snug text-gray-900">SysEva</h5>
+      </div>
+      <nav class="flex flex-col gap-1 min-w-[240px] p-2 font-sans text-base font-normal text-gray-700">
+        
+        {% if 'ROLE_CHIEF_EDITOR' in app.user.roles or 'ROLE_ADMIN' in app.user.roles %}
+<a href="{{ path('add_article') }}" class="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-orange-50 hover:bg-opacity-80 focus:bg-orange-50 focus:bg-opacity-80 active:bg-gray-50 active:bg-opacity-80 hover:text-orange-900 focus:text-orange-900 active:text-orange-900 outline-none">
+    <div class="grid place-items-center mr-4">
+        <!-- SVG Icon -->
+        <svg class="h-8 w-8 text-orange-300" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z"/>
+            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+            <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+            <line x1="12" y1="11" x2="12" y2="17" />
+            <line x1="9" y1="14" x2="15" y2="14" />
+        </svg>
+    </div>
+    Add Articles
+</a>
+{% endif %}
+
+
+        <a href="{{ path('sections_index') }}" class="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-gray-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none">
+            <div class="grid place-items-center mr-4">
+              <!-- Profile Icon -->
+            </div>
+            Section's list
+        </a>
+    
+  
+        <a href="{{ path('list_articles') }}" class="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-gray-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none">
+            <div class="grid place-items-center mr-4">
+            <!-- Sign In Icon -->
+          </div>
+          Articles List
+        </a>
+  
+        <!-- Additional links as required -->
+      </nav>
+    </div> 
+    <main class="flex-grow p-4 bg-[#fdedec] dark:bg-[#fdedec]">
+      <!-- Main content area -->
+      
+      <!-- Contenu de la liste des sections -->
+      <div class="col-md-10">
+          <div class="container">
+              <div class="row">
+                  <div class="col-md-6">
+                      <h1 class="mb-4">Add new section</h1>
+                      {# Formulaire pour ajouter une section #}
+                      <form method="post" action="{{ path('section_new') }}">
+                          <div class="mb-3">
+                              <label for="nom" class="form-label">Section label</label>
+                              <input type="text" id="nom" name="nom" class="form-control" required>
+                          </div>
+                          <button type="submit" class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Add new section</button>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+    
+    </main>
+  </div>
+
+{% endblock %}
+

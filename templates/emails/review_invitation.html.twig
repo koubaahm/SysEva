@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitation to Review Articles</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f4f4f4; 
+            margin: 0; 
+            padding: 0; 
+            color: #333;
+        }
+        .container {
+            width: 100%; 
+            max-width: 600px; 
+            margin: 30px auto; 
+            background-color: #ffffff; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(to right, #fa709a 0%, #fee140 100%); 
+            color: #ffffff; 
+            padding: 20px; 
+            text-align: center; 
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px; 
+            line-height: 1.8; 
+            text-align: left;
+        }
+      .image-container img {
+            max-width: 100%; /* Ensures the image is responsive */
+            height: auto;
+            display: block;
+            margin: 0 auto; /* Centers the image horizontally */
+        }
+        .footer {
+            background-color: #333; 
+            color: #fff; 
+            padding: 20px; 
+            text-align: center; 
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            Invitation to Review Articles
+        </div>
+        <div class="content">
+            <div class="image-container">
+                <img src="https://drive.google.com/uc?export=view&id=1uzEGgVwnrM5BWEt-DUAxf81NAakzwbmx" alt="Relevant Description">
+            </div>
+            <p>Hi {{ user.getNom() }},</p>
+            <p>You have been selected to review the following articles:</p>
+            <ul>
+                {% for article in articles %}
+                <li>{{ article.getTitre() }}</li>
+                {% endfor %}
+            </ul>
+            <p>We appreciate your expertise and look forward to your valuable feedback.</p>
+        </div>
+        <div class="footer">
+            Best regards,<br>The SysEva Team
+        </div>
+    </div>
+</body>
+</html>

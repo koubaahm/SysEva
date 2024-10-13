@@ -1,0 +1,40 @@
+{# templates/section/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+{% block title %}Section List{% endblock %}
+
+
+{% block body %}
+
+
+      <!-- Contenu de la liste des sections -->
+      <div class="container mx-auto px-4">
+        <h1 class="text-2xl font-semibold mb-5">Section's List</h1>
+        <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {% for section in sections %}
+            <li class="col-span-1 divide-y divide-gray-200 rounded-lg bg-gray-200 shadow">
+                <div class="flex flex-col p-6">
+                    <h2 class="text-xl font-medium text-gray-900">{{ section.nom }}</h2>
+                    <h4 class="text-sm font-medium text-gray-900">{{ section.description }}</h4>
+
+                    <!-- Additional Section details can go here -->
+                    {% if 'ROLE_CHIEF_EDITOR' in app.user.roles or 'ROLE_ADMIN' in app.user.roles %}
+    
+                    <div class="mt-4 flex space-x-3 md:mt-6">
+                        <button type="button" class="text-gray-900 bg-[#f89406] dark:bg-[#f89406] font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" onclick="event.preventDefault(); if (confirm('Are you sure you want to delete this section?')) { document.getElementById('delete-form-{{ section.id }}').submit(); }">Delete</button>
+                    </div>
+                    {%endif%}
+                </div>
+                
+            </li>
+            {% else %}
+            <li>No sections found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    
+    
+
+{% endblock %}
+

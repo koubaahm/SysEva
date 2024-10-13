@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Password Reset Email Sent{% endblock %}
+
+{% block body %}
+<style>
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .header {
+        background-color: #f4f4f4;
+        padding: 10px 20px;
+        text-align: center;
+        border-radius: 8px 8px 0 0;
+        border-bottom: 1px solid #ccc;
+    }
+    .content {
+        padding: 20px;
+        text-align: center;
+    }
+    .btn-link {
+        color: white; /* White text for better contrast */
+        text-decoration: none;
+        padding: 8px 15px; /* Slightly larger padding for better visibility */
+        display: inline-block;
+        margin-top: 10px;
+        background-color: #ff9800; /* Orange background */
+        border: none; /* Remove border */
+        border-radius: 5px;
+        font-weight: bold; /* Make the text bold */
+        cursor: pointer; /* Cursor pointer to indicate it's clickable */
+    }
+    .btn-link:hover {
+        background-color: #e67e22; /* Darker orange for hover effect */
+    }
+</style>
+<div class="container">
+    <div class="header">
+        <h4>Password Reset Email Sent</h4>
+    </div>
+    <div class="content">
+        <p>
+            If an account matching your email exists, an email has just been sent containing a link you can use to reset your password.
+            This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+        </p>
+        <p>
+            If you don't receive an email, please check your spam folder or
+            <a href="{{ path('app_forgot_password_request') }}" class="btn-link">try again</a>.
+        </p>
+
+        <a href="{{ path('login') }}" class="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-orange-50 hover:bg-opacity-80 focus:bg-orange-50 focus:bg-opacity-80 active:bg-gray-50 active:bg-opacity-80 hover:text-orange-900 focus:text-orange-900 active:text-orange-900 outline-none">
+            <svg class="h-8 w-8 text-orange-300"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />  <path d="M20 12h-13l3 -3m0 6l-3 -3" /></svg>
+            <span class="ml-2">Go back to login page</span>
+        </a> 
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,80 @@
+{# templates/section/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+{% block title %}Profile informations{% endblock %}
+
+
+{% block body %}
+
+
+      <div class="h-6"></div>
+      <!-- Contenu de la liste des sections -->
+      
+      <div class="mt-5 mx-auto container">
+        <div class="bg-gray-200 overflow-hidden shadow rounded-lg border">
+            <div class="px-4 py-5 sm:px-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        User Profile
+                    </h3>
+                    <a href="{{ path('profile_edit') }}" class=" text-[#f89406] hover:text-[#f89406]">Edit</a>
+                </div>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500">
+                    Personal details and application.
+                </p>
+            </div>
+            <div class="border-t border-gray-200">
+                <dl>
+                    <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">
+                            Full name
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            {{ user.nom }} {{ user.prenom }}
+                        </dd>
+                    </div>
+                    <!-- Repeat the block below for each user attribute you want to display -->
+                    <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">
+                            Email address
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            {{ user.email }}
+                        </dd>
+                    </div>
+                    <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">
+                            Phone number
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            {{ user.numTel }}
+                        </dd>
+                    </div>
+                    <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">
+                            Laboratory
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            {{ user.laboratoire }}
+                        </dd>
+                    </div>
+                    <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt class="text-sm font-medium text-gray-500">
+                                    Skills
+                                </dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    <ul>
+                                        {% for competence in user.competences %}
+                                            <li>{{ competence }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

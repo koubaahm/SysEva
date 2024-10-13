@@ -1,0 +1,48 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            lazy: true
+            provider: app_user_provider
+            custom_authenticator: App\Security\UserAuthenticator
+            logout:
+                path: app_logout
+                
+
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
+                always_remember_me: true
+
+            form_login:
+                login_path: login
+                # Redirection après connexion réussie
+                default_target_path: login
+
+            # Définir l'authentificateur "App\Security\UserAuthenticator" comme point d'entrée
+            entry_point: App\Security\UserAuthenticator
+
+    access_control:
+        - { path: ^/login, roles:  }
+        - { path: ^/reset-password, roles:  } 
+        - { path: ^/check-mail, roles:  }
+        - { path: ^/reset/, roles:  }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/, roles: ROLE_USER }
+
+    access_denied_url: /access-denied
+        
+

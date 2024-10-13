@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+{% block title %}Ranking{% endblock %}
+
+{% block body %}
+<div class="flex h-screen">
+    <!-- Section List -->
+    <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 overflow-y-auto">
+        <header class="text-center mb-4">
+            <h1 class="text-2xl font-semibold">Section List</h1>
+        </header>
+        <nav class="flex flex-col gap-1 min-w-[240px] p-2 font-sans text-base font-normal text-gray-700">
+            <div class="buttons">
+                {% for section in sections %}
+                    <button onclick="filterArticles({{ section.id }})" class="w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-orange-50 hover:bg-opacity-80 focus:bg-orange-50 focus:bg-opacity-80 active:bg-gray-50 active:bg-opacity-80 hover:text-orange-900 focus:text-orange-900 active:text-orange-900 outline-none">
+                        <div class="grid place-items-center mr-4">
+                            <!-- SVG Icon -->
+                            <svg class="h-8 w-8 text-orange-300" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z"/>
+                                <path d="M3.5 5.5l1.5 1.5l2.5 -2.5" />
+                                <path d="M3.5 11.5l1.5 1.5l2.5 -2.5" />
+                                <path d="M3.5 17.5l1.5 1.5l2.5 -2.5" />
+                                <line x1="11" y1="6" x2="20" y2="6" />
+                                <line x1="11" y1="12" x2="20" y2="12" />
+                                <line x1="11" y1="18" x2="20" y2="18" />
+                            </svg>
+                        </div>
+                        {{ section.acronyme }} - {{ section.nom }}
+                    </button>
+                {% endfor %}
+            </div>
+        </nav>
+    </div>
+
+    <!-- Separator -->
+    <div class="bg-black w-1"></div>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-4 bg-white">
+        <div class="container mx-auto px-4">
+            <h1 class="text-2xl font-semibold mb-5">Ranking 🏆</h1>
+            <div class="grid grid-cols-1 gap-6">
+                {% for article in articles %}
+                    <div class="divide-y divide-gray-200 rounded-lg bg-gray-200 shadow section-{{ article.section.id }}" style="display: none;">
+                        <div class="flex flex-col p-6">
+                            <h3 class="text-sm font-medium text-[#f89406]">{{ article.titre }}</h3>
+                            <div class="mt-4">
+                                <table class="w-full">
+                                    <tbody>
+                                    <tr>
+                                            <td class="font-semibold text-gray-700">ID:</td>
+                                            <td class="text-gray-500">{{ article.id ? article.id : 'undefined' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-semibold text-gray-700">PMID:</td>
+                                            <td class="text-gray-500">{{ article.pmid ? article.pmid : 'undefined' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-semibold text-gray-700">DOI:</td>
+                                            <td class="text-gray-500">{{ article.doi ? article.doi : 'undefined' }}</td>
+                                        </tr>                           
+                                        <tr>
+                                            <td class="font-semibold text-gray-700">Main Author:</td>
+                                            <td class="text-gray-500">{{ article.auteurPrincipale }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-semibold text-gray-700">Authors:</td>
+                                            <td class="text-gray-500">{{ article.auteurs }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-semibold text-gray-700">Affiliation:</td>
+                                            <td class="text-gray-500">{{ article.affiliation }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-semibold text-gray-700">Average Rating:</td>
+                                            <td class="text-gray-500"><strong>{{ article.moyenne }}</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="mt-4">
+                                    <a href="{{ path('app_view_article', {'id': article.id}) }}" class="text-blue-500 hover:underline">View Article</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div>No articles found.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    function filterArticles(sectionId) {
+        const articles = document.querySelectorAll('.section-' + sectionId);
+        const allArticles = document.querySelectorAll('main .grid > div');
+        
+        allArticles.forEach(article => {
+            article.style.display = 'none';
+        });
+
+        articles.forEach(article => {
+            article.style.display = 'block';
+        });
+    }
+</script>
+{% endblock %}

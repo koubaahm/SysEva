@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Vérification si SweetAlert2 est défini
+            if (typeof Swal !== 'undefined') {
+                // Configuration de base pour SweetAlert2 pour adopter le thème orange
+                const swalBaseConfig = {
+                    confirmButtonColor: '#ff9800', // Définit la couleur du bouton de confirmation en orange
+                    // Vous pouvez ajouter ici d'autres options de configuration pour personnaliser davantage les alertes
+                };
+
+                {% for message in app.flashes('error') %}
+                    Swal.fire(Object.assign({}, swalBaseConfig, {
+                        title: 'Erreur!',
+                        text: "{{ message|e('js') }}",
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    }));
+                {% endfor %}
+            }
+        });
+    </script>
+{% endblock %}

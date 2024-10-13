@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Your Password</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(to right, #fa709a 0%, #fee140 100%);
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px;
+            line-height: 1.8;
+            text-align: center;
+        }
+        .button {
+            background-color: #ff9800;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto; /* Centers the image and adds spacing */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Reset Your Password</h1>
+        </div>
+        <div class="content">
+            <div class="image-container">
+                <img src="https://drive.google.com/uc?export=view&id=1uzEGgVwnrM5BWEt-DUAxf81NAakzwbmx" alt="Reset Password">
+            </div>
+            <p>To reset your password, please visit the following link:</p>
+            <a href="{{ url('app_reset_password', {token: resetToken.token}) }}" class="button">Reset My Password</a>
+            <p>This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+            <p>If you encounter any difficulties resetting your password, please contact our support team.</p>
+        </div>
+        <div class="footer">
+            Cheers!<br>
+            The Team
+        </div>
+    </div>
+</body>
+</html>

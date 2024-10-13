@@ -1,0 +1,179 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block head_stylesheets %}
+    {{ parent() }}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet">
+    <style>
+        .grid_gestions {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Creates a responsive grid with a minimum column width of 280px */
+            gap: 20px; /* Spacing between grid items */
+            margin: 0 auto;
+            padding: 30px;
+        }
+        .unassigned_col, .senior_Editor {
+            padding: 20px;
+            border-radius: 4px;
+            text-align: center;
+            border: 2px solid #e7e7e7;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        .section {
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: grab; /* cursor indicates the item can be grabbed */
+            transition: background-color 0.3s ease;
+        }
+        .section:hover {
+            background-color: #e8e8e8; /* a slightly darker shade on hover to indicate interactivity */
+        }
+        .section:active {
+            cursor: grabbing; /* cursor changes when the item is being dragged */
+            background-color: #d0d0d0; /* even darker to simulate a click or press */
+        }
+        .section.dragging {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000; /* ensures the dragging element is above others */
+        }
+    </style>
+{% endblock %}
+
+{% block head_javascripts %}
+    {{ parent() }}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+{% endblock %}
+
+{% block content %}
+    <div x-data="layout" class="flex h-screen">
+        <main class="flex-grow p-4 bg-white">
+          
+            <div class="h-6"></div>
+            <div class="container mx-auto px-4">
+                <div class="alert alert-success bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert" id="successMessage" style="display: none;">
+                    <strong class="font-bold">Success!</strong>
+                    <span class="block sm:inline">This is a success alert, the saving work</span>
+                </div>
+                <div>
+                    <div class="grid_gestions">
+                        <div class="unassigned_col bg-gray-200 p-4 rounded-lg">
+                            <h2 class="text-xl font-semibold mb-5 text-black">Unassigned Sections</h2>
+                            {% for section in sections %}
+                                {% if section.seniorEditor == null %}
+                                <div class="section bg-gray-800 text-black p-2 rounded-md mb-2" id="section_{{ section.id }}">
+                                    <p>{{ section.nom }}</p>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% for user in seniorEds %}
+                        <div class="senior_Editor bg-gray-200 p-4 rounded-lg" id="{{ user.id }}">
+                            <h2 class="text-xl font-semibold mb-5 text-black">{{ user.nom }} {{ user.prenom }}'s Sections</h2>
+                            {% for section in sections %}
+                                {% if section.seniorEditor != null and section.seniorEditor.id == user.id %}
+                                <div class="section bg-gray-800 text-black p-2 rounded-md mb-2" id="section_{{ section.id }}">
+                                    <p>{{ section.nom }}</p>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                </div>
+                <button class="bg-gray-800 p-2 hover:bg-orange-800 rounded-md mt-4 text-white" id="btnExport">Save!</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var sections = document.querySelectorAll('.section');
+            var containers = document.querySelectorAll('.grid_gestions, .unassigned_col, .senior_Editor');
+
+            sections.forEach(function(section) {
+                section.setAttribute('draggable', 'true');
+                section.addEventListener('dragstart', handleDragStart, false);
+                section.addEventListener('dragend', handleDragEnd, false);
+            });
+
+            containers.forEach(function(container) {
+                container.addEventListener('dragover', handleDragOver, false);
+                container.addEventListener('drop', handleDrop, false);
+            });
+
+            function handleDragStart(event) {
+                event.dataTransfer.setData('text/plain', event.target.id);
+                event.target.classList.add('dragging');
+            }
+
+            function handleDragEnd(event) {
+                event.target.classList.remove('dragging');
+            }
+
+            function handleDragOver(event) {
+                event.preventDefault();
+                event.dataTransfer.dropEffect = 'move';
+            }
+
+            function handleDrop(event) {
+                event.preventDefault();
+                var data = event.dataTransfer.getData('text/plain');
+                var draggedElement = document.getElementById(data);
+                draggedElement.parentNode.removeChild(draggedElement);
+                event.target.appendChild(draggedElement);
+            }
+        });
+
+        var button = document.getElementById('btnExport');
+        button.addEventListener('click', exportColumns);
+
+        function exportColumns() {
+            var sections = {
+                unassigned: [],
+            };
+
+            var unassignedCol = document.querySelector('.unassigned_col');
+            var seniorEditorCols = document.querySelectorAll('.senior_Editor');
+
+            function getSectionsFromColumn(column) {
+                var sectionData = [];
+                column.querySelectorAll('.section').forEach(function(section) {
+                    var sectionId = section.getAttribute('id').replace('section_', '');
+                    var sectionName = section.textContent.trim();
+                    sectionData.push({id: sectionId, name: sectionName});
+                });
+                return sectionData;
+            }
+
+            sections.unassigned = getSectionsFromColumn(unassignedCol);
+            seniorEditorCols.forEach(function(column) {
+                sections[column.id] = getSectionsFromColumn(column);
+            });
+
+            var jsonSections = JSON.stringify(sections);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/admin/custom/actions/saveSeniorEditors', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var successMessage = document.getElementById('successMessage');
+                    successMessage.style.display = 'block';
+                    setTimeout(function() {
+                        successMessage.style.display = 'none';
+                    }, 1000);
+                }
+            };
+            xhr.send(jsonSections);
+        }
+    </script>
+{% endblock %}

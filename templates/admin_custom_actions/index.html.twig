@@ -1,0 +1,98 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block head_stylesheets %}
+    {{ parent() }}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block head_javascripts %}
+    {{ parent() }}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+{% endblock %}
+
+{% block content %}
+    <div x-data="layout" class="flex h-screen">
+       
+        
+        <!-- Main content -->
+        <main class="flex-grow p-4 bg-white">
+            
+            
+            <div class="h-6"></div>
+            
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {% for section in sections %}
+                        <div class="bg-gray-200 rounded-lg shadow divide-y divide-gray-200">
+                            <div class="p-6">
+                                <h3 class="text-lg font-semibold text-gray-900">{{ section.nom }}</h3>
+                                {% if section.SectionEditors is not empty %}
+                                    {% for editor in section.SectionEditors %}
+                                        <p class="text-sm text-gray-500 mt-1">Section Editor: {{ editor.nom }} {{ editor.prenom }}</p>
+                                    {% endfor %}
+                                {% else %}
+                                    <p class="text-sm text-gray-500 mt-1">No assigned editor</p>
+                                {% endif %}
+                                
+                                <form id="section-{{ section.id }}-form" class="mt-4" method="POST" action="{{ path('app_admin_custom_actions_set_section_editor') }}">
+                                    <input type="hidden" name="section" value="{{ section.id }}">
+                                    <input type="hidden" name="users" value="">
+                                    <button type="button" class="mt-2 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-800 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 show-multiple-users">Choose one or more users</button>
+                                    <div class="mt-2 hidden multiple-users">
+                                        <label for="users-{{ section.id }}" class="block text-sm font-medium text-black">Choose one or more users:</label>
+                                        {% for user in sectionEds %}
+                                            <div>
+                                                <input type="checkbox" id="user-{{ section.id }}-{{ user.id }}" name="user-{{ section.id }}" value="{{ user.id }}" class="mt-1 user-checkbox">
+                                                <label for="user-{{ section.id }}-{{ user.id }}" class="ml-2">{{ user.nom }} {{ user.prenom }}</label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <button type="button" class="mt-2 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-800 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 submit-btn">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('readystatechange', function() {
+            document.title = "Select Section Editors";
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.show-multiple-users').forEach(button => {
+                button.addEventListener('click', function () {
+                    this.nextElementSibling.classList.toggle('hidden');
+                });
+            });
+
+            document.querySelectorAll('.submit-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const form = this.closest('form');
+                    const selectedUsers = Array.from(form.querySelectorAll('.user-checkbox:checked')).map(cb => cb.value);
+                    form.querySelector('input[name="users"]').value = selectedUsers.join(',');
+                    form.submit();
+                });
+            });
+
+            document.querySelectorAll('.user-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    const form = this.closest('form');
+                    const checkedBoxes = form.querySelectorAll('.user-checkbox:checked');
+                    if (checkedBoxes.length > 3) {
+                        this.checked = false;
+                        alert('You can only select a maximum of 3 users.');
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

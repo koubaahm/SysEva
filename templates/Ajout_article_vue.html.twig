@@ -1,0 +1,141 @@
+{# templates/ajout_article_vue.html.twig #}
+{% extends 'base.html.twig' %}
+{% block title %}Add Article{% endblock %}
+
+{%block stylesheet%}
+<style>
+  .my-input {
+    margin-bottom: 1rem; /* Adjust the 3 value as needed */
+  }
+  </style>
+{%endblock%}
+{% block body %}        
+          <div class="flex flex-col h-full justify-center items-center bg-white">
+                
+                    
+                  <div class=" mt-3 bg-gray-200 rounded-lg shadow p-4 flex-grow">
+                       <!-- Form starts here -->
+                       <form id="form" method="post" action="{{ path('add_article') }}" enctype="multipart/form-data">
+                           <div class="px-5 pb-5">
+                               <!-- PMID -->
+                               <input placeholder="PMID" id="pmid" class="my-input mb-4 text-black placeholder-gray-600 w-full px-4 py-2.5 text-base transition duration-500 ease-in-out transform border-transparent rounded-lg bg-white focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-800 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400" name="pmid" required>
+                               
+                               <!-- DOI -->
+                               <input placeholder="DOI" class="my-input mb-4 text-black placeholder-gray-600 w-full px-4 py-2.5 text-base transition duration-500 ease-in-out transform border-transparent rounded-lg bg-white focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-800 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400" name="doi" required>
+                               
+                               <!-- Title -->
+                               <input placeholder="Title" class="my-input mb-4 text-black placeholder-gray-600 w-full px-4 py-2.5 text-base transition duration-500 ease-in-out transform border-transparent rounded-lg bg-white focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-800 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400" name="titre" required>
+                               
+                               <!-- Main Author -->
+                               <input placeholder="Main Author" class="my-input mb-4 text-black placeholder-gray-600 w-full px-4 py-2.5 text-base transition duration-500 ease-in-out transform border-transparent rounded-lg bg-white focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-800 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400" name="auteurPrincipale" required>
+                               
+                               <!-- Authors -->
+                               <input placeholder="Authors" class="my-input mb-4 text-black placeholder-gray-600 w-full px-4 py-2.5 text-base transition duration-500 ease-in-out transform border-transparent rounded-lg bg-white focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-800 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400" name="auteurs" required>
+                               
+                               <!-- Affiliation -->
+                               <input placeholder="Affiliation" class="my-input mb-4 text-black placeholder-gray-600 w-full px-4 py-2.5 text-base transition duration-500 ease-in-out transform border-transparent rounded-lg bg-white focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-800 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400" name="affiliation" required>
+                               
+                               <!-- Publication Date -->
+                              <input placeholder="Publication Date" class="my-input mb-4 text-black placeholder-gray-600 w-full px-4 py-2.5 text-base transition duration-500 ease-in-out transform border-transparent rounded-lg bg-white focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-800 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400" name="publicationDate" required>
+
+                                <!-- Journal Name -->
+                               <input placeholder="Journal Name" class="my-input mb-4 text-black placeholder-gray-600 w-full px-4 py-2.5 text-base transition duration-500 ease-in-out transform border-transparent rounded-lg bg-white focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-800 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400" name="journalName" required>
+                               
+                               <!-- Select Section -->
+                              <input type="hidden" name="section" value="{{ sections.id }}">
+                              <input class="my-input mb-4 w-full shadow-inner p-4 border-0 rounded-lg bg-white" type="text" name="sectionName" value="{{ sections.nom }}" readonly>
+
+                               <!-- Upload PDF File -->
+                               <div class="my-input mb-4 w-full flex">
+                                   <span class="text-xs py-4 px-2 bg-grey-light text-grey-dark">Upload PDF:</span>
+                                   <input class="flex-1 shadow-inner p-4 border-0" type="file" name="pdfFile" accept=".pdf" required>
+                               </div>
+                           </div>
+                           <div class="flex justify-end p-3">
+                               <button type="submit" class="bg-[#f89406] text-white p-3 rounded-lg hover:bg-orange-700 focus:outline-none">
+                                   <span>Submit</span>
+                               </button>
+                           </div>
+                       </form>
+                       
+
+                      
+                    </div>
+              
+          
+        </div>
+        
+      <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const inputElement = document.getElementById('pmid');
+    inputElement.addEventListener('input', function(event) {
+        let metadataButton = document.getElementById('metadataBtn');
+        if (!metadataButton && event.target.value.trim() !== '') {
+            metadataButton = document.createElement('button');
+            metadataButton.textContent = 'Get Metadata';
+            metadataButton.id = 'metadataBtn';
+            metadataButton.type = 'button'; // Ensure it doesn't submit the form
+            metadataButton.style.backgroundColor = '#f89406'; // Green background
+            metadataButton.style.color = 'white'; // White text
+            metadataButton.style.padding = '10px 20px'; // Padding
+            metadataButton.style.border = 'none'; // No border
+            metadataButton.style.borderRadius = '5px'; // Rounded corners
+            metadataButton.style.cursor = 'pointer'; // Pointer cursor on hover
+            metadataButton.style.textAlign = 'center'; // Center text
+            metadataButton.style.textDecoration = 'none'; // No underline
+            metadataButton.style.fontSize = '16px'; // Font size
+            metadataButton.style.marginTop = '1rem'; // Margin top
+            // Adding hover effect
+            metadataButton.onmouseover = function() {
+                metadataButton.style.backgroundColor = '#c67605'; // Darker green on hover
+            };
+            metadataButton.onmouseleave = function() {
+                metadataButton.style.backgroundColor = '#f89406'; // Original green
+            };
+            inputElement.parentNode.insertBefore(metadataButton, inputElement.nextSibling);
+
+            metadataButton.addEventListener('click', function() {
+                fetchMetadata(inputElement.value); // Function to fetch and update form
+            });
+        }
+    });
+
+    function fetchMetadata(pmid) {
+        fetch('/rechercher-pmid', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ pmid: pmid })
+        })
+        .then(response => response.json())
+        .then(data => updateFormWithData(data))
+        .catch(error => console.error('Error:', error));
+    }
+
+    function updateFormWithData(data) {
+        const result = data.result[Object.keys(data.result)[0]];
+
+        // Remplir les champs DOI, Title, Main Author, Authors et Affiliation
+        document.getElementsByName('doi')[0].value = result.articleids.find(item => item.idtype === 'doi')?.value || '';
+        document.getElementsByName('titre')[0].value = result.title || '';
+        document.getElementsByName('auteurPrincipale')[0].value = result.authors[0]?.name || '';
+        document.getElementsByName('auteurs')[0].value = result.authors.map(author => author.name).join(', ') || '';
+
+        // Vous pouvez remplir d'autres champs de la mÃªme maniÃ¨re
+        const publicationDate = result.pubdate || '';
+        document.getElementsByName('publicationDate')[0].value = publicationDate;
+        const dateObject = new Date(publicationDate);
+
+        // RÃ©cupÃ©rer le nom du journal
+        const journalName = result.source || '';
+        document.getElementsByName('affiliation')[0].value = journalName;
+
+        // RÃ©cupÃ©rer l'affiliation
+     const fullJournalName = result.fulljournalname || '';
+        document.getElementsByName('journalName')[0].value = fullJournalName;
+        
+    }
+});
+</script>
+{% endblock %}

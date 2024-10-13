@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {# Tout votre contenu HTML ici #}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Swal === 'undefined') {
+                console.error('SweetAlert2 is not defined');
+                return;
+            }
+
+            // Configuration de base pour SweetAlert2 pour adopter le thème orange
+            const swalBaseConfig = {
+                confirmButtonColor: '#ff9800', // Bouton OK en orange
+                // Autres configurations de base pour respecter le thème orange
+            };
+
+            {% for message in app.flashes('error') %}
+                Swal.fire(Object.assign({}, swalBaseConfig, {
+                    title: 'Erreur!',
+                    text: "{{ message|e('js') }}",
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                }));
+            {% endfor %}
+            
+            {% for message in app.flashes('warning') %}
+                Swal.fire(Object.assign({}, swalBaseConfig, {
+                    title: 'Attention!',
+                    text: "{{ message|e('js') }}",
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                }));
+            {% endfor %}
+        });
+    </script>
+{% endblock %}

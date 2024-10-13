@@ -1,0 +1,15 @@
+{# templates/section/edit.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier une Section{% endblock %}
+
+{% block body %}
+    <h1>Modifier une Section</h1>
+    {# Formulaire pour modifier une section #}
+    <form method="post">
+        <label for="nom">Nouveau Nom:</label>
+        <input type="text" id="nom" name="nom" value="{{ section.nom }}">
+        <button type="submit">Enregistrer</button>
+    </form>
+{% endblock %}

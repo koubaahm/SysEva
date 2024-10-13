@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Welcome!{% endblock %}
+
+{% block body %}
+<!-- Ensure Chart.js is loaded -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Ajout du contenu du paragraphe ici -->
+   <div class="mt-4 mx-auto max-w-3xl p-6 bg-gray-50 rounded-lg shadow-lg">
+        <h2 class="text-3xl font-bold mb-4 text-gray-900">About the IMIA Yearbook</h2>
+        <p class="mb-4 text-lg leading-relaxed text-gray-700">Since its inception in 1992, the IMIA Yearbook of Medical Informatics has been one of the most visible and valuable “products” provided by the International Medical Informatics Association (IMIA) – not only to its members but to the health and biomedical informatics community at large. Starting in 2014, the IMIA Yearbook has been published in an online open access format.</p>
+        <p class="mb-4 text-lg leading-relaxed text-gray-700">It is designed to present an overview of the most original, excellent state-of-the-art research in the area of health and biomedical informatics of the past year; to provide surveys about recent developments, and comprehensive reviews on relevant topics in this field; and to provide information about IMIA.</p>
+        <p class="mb-4 text-lg leading-relaxed text-gray-700">The IMIA Yearbook of Medical Informatics appears annually and is lead by the current IMIA Board Vice President for Services.</p>
+        <h3 class="text-2xl font-semibold mb-2 text-gray-800">Objectives:</h3>
+        <ul class="list-disc list-inside mb-4 text-lg text-gray-700">
+            <li>To present an overview of the most excellent original state-of-the-art research in the area of health and biomedical informatics of the past year.</li>
+            <li>To provide surveys about the recent developments, and comprehensive reviews on relevant topics in the field of health and biomedical informatics.</li>
+            <li>To provide original papers on the history of Medical Informatics as well as Research and Education organized in the field.</li>
+            <li>To provide syntheses about the most valuable outputs of IMIA Working Groups activities.</li>
+            <li>To provide information about IMIA.</li>
+        </ul>
+        <h3 class="text-2xl font-semibold mb-2 text-gray-800">Target audience:</h3>
+        <ul class="list-disc list-inside mb-4 text-lg text-gray-700">
+            <li>Health and biomedical informatics scientists in research, education, and practice worldwide.</li>
+            <li>Health care professionals interested in current health and biomedical informatics research results.</li>
+            <li>Health and biomedical informatics students and postgraduates.</li>
+            <li>Scientists and professionals with shared interests in biomedical informatics.</li>
+            <li>Educators and teachers in health and biomedical informatics and related fields.</li>
+        </ul>
+
+        {% if 'ROLE_ADMIN' in app.user.roles %}
+        <div>
+          <h1>Statistics</h1>
+          <canvas id="statsChart" width="1" height="1"></canvas>
+        </div>
+      
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/getStats')
+                .then(response => response.json())
+                .then(data => {
+                    const ctx = document.getElementById('statsChart').getContext('2d');
+                    const chart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: ['Total Invitations', 'Total Evaluations'],
+                            datasets: [{
+                                data: [data.total_invitations - data.total_evaluations, data.total_evaluations],
+                                backgroundColor: ['#36a2eb', '#ff6384'],
+                                hoverBackgroundColor: ['#36a2eb', '#ff6384']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.label || '';
+                                            if (label) {
+                                                label += ': ';
+                                            }
+                                            label += context.raw;
+                                            return label;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching stats:', error));
+        });
+        </script>
+    </div> 
+
+  
+{%endif%}
+
+
+</main>
+</div>
+{% endblock %}

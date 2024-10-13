@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activate Your Account</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f4f4f4; 
+            margin: 0; 
+            padding: 0; 
+            color: #333;
+        }
+        .container {
+            width: 100%; 
+            max-width: 600px; 
+            margin: 30px auto; 
+            background-color: #ffffff; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(to right, #fa709a 0%, #fee140 100%); 
+            color: #ffffff; 
+            padding: 20px; 
+            text-align: center; 
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px; 
+            line-height: 1.8; 
+            text-align: center;
+        }
+        .button {
+            background-color: #ff9800; 
+            color: white; 
+            padding: 10px 20px; 
+            text-decoration: none; 
+            border-radius: 5px; 
+            display: inline-block;
+        }
+        .footer {
+            background-color: #333; 
+            color: #fff; 
+            padding: 20px; 
+            text-align: center; 
+            font-size: 14px;
+        }
+        .image-container img {
+            max-width: 100%; /* Ensures the image is responsive */
+            height: auto;
+            display: block;
+            margin: 0 auto; /* Centers the image horizontally */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Activate Your SysEva Account</h1>
+        </div>
+        <div class="content">
+            <div class="image-container">
+                <img src="https://drive.google.com/uc?export=view&id=1uzEGgVwnrM5BWEt-DUAxf81NAakzwbmx" alt="Welcome to SysEva">
+            </div>
+            <p>Hello {{ user.prenom }}!</p>
+            <p>We are delighted to welcome you to SysEva. To activate your account, please click on the link below:</p>
+            <a href="{{ url('app_confirm_account', {'token': user.confirmationToken}) }}" class="button">Activate my account</a>
+            <p>This activation link will expire in <strong>3 hours</strong>.</p>
+            <p>If you encounter any difficulties activating your account, please contact us.</p>
+        </div>
+        <div class="footer">
+            Best regards,<br>The SysEva Team
+        </div>
+    </div>
+</body>
+</html>

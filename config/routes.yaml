@@ -1,0 +1,53 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+add_article:
+    path: /add_article
+    controller: App\Controller\Article\Ajout_Article_Controller::addArticle
+    methods: [GET, POST] 
+
+app_section_add:
+    path: '/section/add'
+    controller: 'App\Controller\SectionController::addSectionForm'
+
+
+#config/routes.yaml
+app_view_article:
+    path: /article/{id}
+    controller: 'App\Controller\Article\Afficher_article::afficherArticle'
+
+preview_pdf:
+    path: /preview-pdf/{filename}
+    controller: 'App\Controller\Article\Afficher_article::previewPdf'
+
+# config/routes.yaml
+login:
+    path: /login
+    controller: App\Controller\SecurityController::login
+app_list_articles:
+    path: /articles
+    controller: 'App\Controller\Article\Ajout_Article_Controller::listArticles'
+    methods: ['GET']
+
+download_pdf:
+    path: /download/{filename}
+    controller: App\Controller\Article\Ajout_Article_Controller::downloadPdf
+
+delete_article:
+    path: /article/delete/{id}
+    controller: App\Controller\Article\Ajout_Article_Controller::deleteArticle
+
+profile_edit:
+    path: /profile/edit
+    controller: App\Controller\ProfileController::edit
+
+profile_show:
+    path: /profile/show
+    controller: 'App\Controller\ProfileController::show'
+
+ranking_index:
+    path: /ranking
+    controller: 'App\Controller\RankingController::index'

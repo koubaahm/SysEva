@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'évaluation{% endblock %}
+
+{% block body %}
+    <h2>Détails de l'évaluation</h2>
+    <ul>
+        {% for critere in criteres %}
+            <li>{{ critere.intitule }} : {{ evaluation.notes[critere.id] }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
